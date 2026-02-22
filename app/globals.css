@@ -138,6 +138,10 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
+
+
+
+
 /* ==== clerk class override ===== */
 
 .cl-providerIcon__github{
@@ -182,4 +186,10 @@
 
 @utility flex-between {
     @apply flex justify-between items-center;
+}
+
+@utility glassmorphism {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
