@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { X } from 'lucide-react';
 import {
     AlertDialog,
@@ -35,6 +35,9 @@ const MeetingModal = ({ isOpen, onClose, title, className, children, handleClick
         <AlertDialog open={isOpen} onOpenChange={onClose}>
             <AlertDialogContent className='flex w-full max-w-[520px] flex-col gap-6 border-none bg-dark-1 px-6 py-9 text-white'>
                 <div className='flex flex-col gap-6'>
+                    <VisuallyHidden>
+                        <AlertDialogTitle>{title}</AlertDialogTitle>
+                    </VisuallyHidden>
                     {/* check later might cause error */}
                     <AlertDialogCancel className='absolute top-4 right-4 border-none bg-transparent hover:bg-transparent p-0 text-white hover:text-gray-300'>
                         <X size={20} />
@@ -56,7 +59,6 @@ const MeetingModal = ({ isOpen, onClose, title, className, children, handleClick
                         {buttonText || 'Schedule Meeting'}
                     </Button>
                 </div>
-
             </AlertDialogContent>
         </AlertDialog>
     )
