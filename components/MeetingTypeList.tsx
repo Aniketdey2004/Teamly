@@ -10,11 +10,11 @@ import { useUser } from "@clerk/nextjs";
 import { Textarea } from "@/components/ui/textarea";
 import ReactDatePicker from 'react-datepicker';
 import { createScheduleMeeting } from "@/actions/stream.actions";
+import { Input } from "@/components/ui/input"
 
 const initialValues = {
     dateTime: new Date(),
     description: '',
-    link: ''
 };
 
 const MeetingTypeList = () => {
@@ -25,20 +25,21 @@ const MeetingTypeList = () => {
     const [callDetail, setCallDetail] = useState<Call>();
     const client = useStreamVideoClient();
     const { user } = useUser();
+    const [link, setLink] = useState('');
 
-    const handleScheduleMeeting= async()=>{
+    const handleScheduleMeeting = async () => {
         try {
-            if(!values.dateTime){
+            if (!values.dateTime) {
                 toast.error('Please select a date and time');
                 return;
             }
 
-            const callId=await createScheduleMeeting(
+            const callId = await createScheduleMeeting(
                 values.dateTime.toISOString(),
                 values.description || 'Scheduled Meeting'
             );
 
-            setCallDetail({id: callId} as Call);
+            setCallDetail({ id: callId } as Call);
             toast.success('Meeting Scheduled Successfully');
             setValues(initialValues);
         } catch (error) {
@@ -53,8 +54,8 @@ const MeetingTypeList = () => {
 
             if (!call) throw new Error('Failed to create meeting');
 
-            const startsAt = values.dateTime.toISOString();
-            const description = values.description || 'Instant Meeting';
+            const startsAt = new Date().toISOString();
+            const description = 'Instant Meeting';
 
             await call.getOrCreate({
                 data: {
@@ -118,7 +119,7 @@ const MeetingTypeList = () => {
                                 Add a description
                             </label>
                             <Textarea className="border-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0"
-                                onChange={(e) => setValues({ ...values, description: e.target.value })} />
+                                onChange={(e) => setValues({ ...values, description: e.target.value })} value={values.description} />
                         </div>
                         <div className="flex w-full flex-col gap-2.5">
                             <label className="text-base font-normal leading-[22.4px] text-sky-2">
@@ -140,9 +141,12 @@ const MeetingTypeList = () => {
                 (
                     <MeetingModal
                         isOpen={meetingState === 'isScheduleMeeting'}
-                        onClose={() => setMeetingState(undefined)}
+                        onClose={() => {
+                            setCallDetail(undefined)
+                            setMeetingState(undefined)
+                        }}
                         title='Meeting Created'
-                        handleClick={()=>{
+                        handleClick={() => {
                             navigator.clipboard.writeText(meetingLink);
                             toast.success('Meeting link copied');
                         }}
@@ -160,6 +164,24 @@ const MeetingTypeList = () => {
                 buttonText='Start Meeting'
                 handleClick={handleInstantMeeting}
             />
+            <MeetingModal
+                isOpen={meetingState === 'isJoiningMeeting'}
+                onClose={() => setMeetingState(undefined)}
+                title="Type the link here"
+                className="text-center"
+                buttonText="Join Meeting"
+                handleClick={() => {
+                    if(link)
+                        router.push(link)
+                }}
+            >
+                <Input
+                    placeholder="Meeting link"
+                    onChange={(e) => setLink(e.target.value)}
+                    className="border-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0"
+                    value={link}
+                />
+            </MeetingModal>
         </section>
     )
 }
