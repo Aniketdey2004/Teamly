@@ -5,7 +5,6 @@ import { useGetCallById } from '@/hooks/useGetCallById';
 import { useUser } from '@clerk/nextjs'
 import { useStreamVideoClient } from '@stream-io/video-react-sdk';
 import { useRouter } from 'next/navigation';
-import React from 'react'
 import { toast } from 'sonner';
 
 const Table = ({ title, description }: { title: string, description: string }) => {
