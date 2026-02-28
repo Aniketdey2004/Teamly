@@ -14,9 +14,9 @@ interface MeetingCardProps {
 }
 const MeetingCard = ({ icon, title, date, isPreviousMeeting, buttonIcon1, handleClick, link, buttonText }: MeetingCardProps) => {
     return (
-        <section className='flex min-h-[258px] w-full flex-col justify-between rounded-[14px] bg-dark-1 px-5 py-8 xl:max-w-[568px]'>
+        <section className='flex min-h-[200px] w-full flex-col justify-between rounded-[14px] bg-dark-1 px-5 py-8 xl:max-w-[568px]'>
             <article className='flex flex-col gap-5'>
-                <Image src={icon} width={28} height={28} />
+                <Image src={icon} width={28} height={28} alt='feature'/>
                 <div className='flex flex-col gap-2'>
                     <h1 className='text-2xl font-bold'>{title}</h1>
                     <p className='text-base font-normal'>{date}</p>

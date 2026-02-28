@@ -2,10 +2,10 @@
 import { useGetCalls } from '@/hooks/useGetCalls'
 import { Call, CallRecording } from '@stream-io/video-react-sdk';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MeetingCard from './MeetingCard';
 import Loader from './Loader';
-
+import { toast } from "sonner"
 
 const CallList = ({type}:{type:'ended' | 'upcoming' | 'recordings'}) => {
     const {endedCalls, upcomingCalls, callRecordings, isLoading}=useGetCalls();
@@ -37,6 +37,26 @@ const CallList = ({type}:{type:'ended' | 'upcoming' | 'recordings'}) => {
                 return [];
         }
     }
+
+    useEffect(()=>{
+        const fetchRecordings=async ()=>{
+            try {
+                const callData=await Promise.all(
+                    callRecordings?.map((meetings)=>meetings.queryRecordings())  ??[],
+                );
+
+                const rec=callData.filter((call)=>call.recordings.length>0).flatMap((call)=>call.recordings);
+
+                setRecordings(rec);
+            } catch (error) {
+                toast.error('Try again later');
+            }
+            
+        };
+
+        if(type==='recordings')
+            fetchRecordings();
+    },[type, callRecordings])
 
     if(isLoading) return <Loader/>
 
