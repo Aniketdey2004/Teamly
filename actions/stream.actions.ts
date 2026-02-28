@@ -15,15 +15,33 @@ export const tokenProvider=async()=>{
 
     const streamClient=new StreamClient(STREAM_API_KEY,STREAM_API_SECRET);
 
-    const expirationTime= Math.floor(Date.now()/1000)+3600;
-
-    const issuedAt=Math.floor(Date.now()/1000)-60;
-
     const token=streamClient.generateUserToken({
         user_id: user.id,
         validity_in_seconds: 3600
     });
 
     return token;
+}
 
+export const createScheduleMeeting= async (startsAt:string, description:string)=>{
+    const user=await currentUser();
+    if(!user) throw new Error('User is not authenticated'); 
+    if(!STREAM_API_KEY) throw new Error('Stream API key secret is missing');
+    if(!STREAM_API_SECRET) throw new Error('Stream Api secret is missing');
+
+    const streamClient=new StreamClient(STREAM_API_KEY,STREAM_API_SECRET);
+
+    const id=crypto.randomUUID();
+    const call=streamClient.video.call('default', id);
+
+
+    await call.create({
+        data:{
+            created_by_id:user.id,
+            starts_at:new Date(startsAt),
+            custom:{ description}
+        }
+    });
+
+    return id;
 }

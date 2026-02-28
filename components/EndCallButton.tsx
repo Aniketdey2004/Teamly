@@ -16,6 +16,8 @@ const EndCallButton = () => {
     return null;
 
   const endCall=async ()=>{
+    await call.camera.disable(true);
+    await call.microphone.disable(true);
     await call.endCall();
     router.push('/');
   };
