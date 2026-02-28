@@ -28,7 +28,7 @@ const MeetingCard = ({ icon, title, date, isPreviousMeeting, buttonIcon1, handle
                         <Button onClick={handleClick} className='rounded bg-blue-1 px-6'>
                             {
                                 buttonIcon1 && (
-                                    <Image src={buttonIcon1} width={20} height={20} />
+                                    <Image src={buttonIcon1} width={20} height={20}  alt='feature'/>
                                 )
                             }
                             &nbsp; {buttonText}
